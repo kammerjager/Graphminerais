@@ -1,3 +1,3 @@
 # Graphminerais
 
-test
+teste
