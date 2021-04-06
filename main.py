@@ -5,7 +5,7 @@ import sqlite3
 
 #manquant: id 71, 120, 270
 
-with open('commodities/commoditiesEX.json') as f:
+with open('commoditiesEX.json') as f:
     data = json.load(f)
 
 
@@ -44,6 +44,8 @@ def diff():
 
 
 class Db:
+    
+    @staticmethod
     def connect():
         try:
             conn = sqlite3.connect('dbminerais.db')
@@ -53,7 +55,7 @@ class Db:
             print(error)
             conn.rollback()
         
-        return conn
+        return conn, cursor
 
 class Commodities:
     def __init__(self, id: int, name: str, rarity: bool, category_id: int):
@@ -62,12 +64,12 @@ class Commodities:
         self.rarity = rarity
         self.category_id = category_id
     
-    def insert_commodities(Commodities):
-        conn = Db.connect() 
-        cursor = Db.connect()
+    @staticmethod
+    def insert_commodities(self):
+        conn, cursor = Db.connect() 
         
         try:
-            cursor.execute("INSERT INTO TEST ( id, nom, rare, category) VALUES ( %s, %s, %s, %s);" % ( Commodities.id, str(Commodities.name), Commodities.rarity, Commodities.category_id))
+            cursor.execute("INSERT INTO TEST ( id, nom, rare, category) VALUES ( %s, %s, %s, %s);" % ( self.id, str(self.name), self.rarity, self.category_id))
         
         except sqlite3.Error as error:
             print(error)
