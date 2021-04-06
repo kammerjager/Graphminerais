@@ -58,23 +58,27 @@ class Db:
         return conn, cursor
 
 class Commodities:
+    
     def __init__(self, id: int, name: str, rarity: bool, category_id: int):
         self.id = id
         self.name = name
         self.rarity = rarity
         self.category_id = category_id
     
-    @staticmethod
-    def insert_commodities(self):
-        conn, cursor = Db.connect() 
-        
-        try:
-            cursor.execute("INSERT INTO TEST ( id, nom, rare, category) VALUES ( %s, %s, %s, %s);" % ( self.id, str(self.name), self.rarity, self.category_id))
-        
-        except sqlite3.Error as error:
-            print(error)
-            conn.rollback()
-        conn.commit()
+
+    
+def insert_commodities(commodities: Commodities):
+    conn, cursor = Db.connect() 
+    
+    try:
+        parameter = """INSERT INTO TEST (id, nom, rare, category) VALUES (?, ?, ?, ?);"""
+        data = ( commodities.id, str(commodities.name), commodities.rarity, commodities.category_id)
+        cursor.execute(parameter, data)
+
+    except sqlite3.Error as error:
+        print(error)
+        conn.rollback()
+    conn.commit()
 
 
 #def setup(): 
