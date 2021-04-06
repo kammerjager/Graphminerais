@@ -22,7 +22,7 @@ with open('commoditiesEX.json') as f:
 #item id:1, category:name# print(data[0]["category"]["name"])
 
 #print(len(data))
-# formatting: Shift+Alt+f
+
 def diff():
     A = []
     for i in range(373):
@@ -30,13 +30,11 @@ def diff():
         x = str(x)
         A = A + [x]
 
-    #print(A)
     B = []
     for i in range(376):
         y = i+1
         y = str(y)
         B = B + [y]
-    #print(B)
     Z = (set(B).difference(set(A)))
     #print(Z)
     return Z
@@ -56,7 +54,7 @@ class Db:
     def connect():
         try:
             conn = sqlite3.connect('dbminerais.db')
-            print("success")
+            #print("success")
             cursor = conn.cursor()
         except sqlite3.Error as error:
             print(error)
@@ -80,22 +78,22 @@ class Db:
         conn.commit()
 
 
+
+def setup(): 
+    try:
+        conn, cursor = Db.connect()
+        conn.execute("INSERT INTO Commodities ( Id, Name, Rarity, Category_Id) VALUES ( %s, %s, %s, %s);" % ())       
     
-
-
-#def setup(): 
-#    try:
-#        conn = Db.connect()
-#        conn.execute("INSERT INTO Commodities ( Id, Name, Rarity, Category_Id) VALUES ( %s, %s, %s, %s);" % ())       
-#    
-#    except:
+    except:
     
 
 ################################_test_py_to_sql_###############################
 
 
-T1 = Commodities(1, "titi", True, 2)
-Db.insert_commodities(T1)
+#T1 = Commodities(1, "titi", True, 2)
+#Db.insert_commodities(T1)
 
 
 ####################################_Else_#####################################
+
+# formatting: Shift+Alt+f
