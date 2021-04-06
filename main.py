@@ -42,6 +42,13 @@ def diff():
     return Z
 ##################################_py_to_sql_##################################
 
+class Commodities:
+    
+    def __init__(self, id: int, name: str, rarity: bool, category_id: int):
+        self.id = id
+        self.name = name
+        self.rarity = rarity
+        self.category_id = category_id
 
 class Db:
     
@@ -56,29 +63,24 @@ class Db:
             conn.rollback()
         
         return conn, cursor
+    
+    @staticmethod
+    def insert_commodities(commodities: Commodities):
 
-class Commodities:
-    
-    def __init__(self, id: int, name: str, rarity: bool, category_id: int):
-        self.id = id
-        self.name = name
-        self.rarity = rarity
-        self.category_id = category_id
-    
+        conn, cursor = Db.connect() 
+        
+        try:
+            parameter = """INSERT INTO TEST (id, nom, rare, category) VALUES (?, ?, ?, ?);"""
+            data = ( commodities.id, str(commodities.name), commodities.rarity, commodities.category_id)
+            cursor.execute(parameter, data)
+
+        except sqlite3.Error as error:
+            print(error)
+            conn.rollback()
+        conn.commit()
+
 
     
-def insert_commodities(commodities: Commodities):
-    conn, cursor = Db.connect() 
-    
-    try:
-        parameter = """INSERT INTO TEST (id, nom, rare, category) VALUES (?, ?, ?, ?);"""
-        data = ( commodities.id, str(commodities.name), commodities.rarity, commodities.category_id)
-        cursor.execute(parameter, data)
-
-    except sqlite3.Error as error:
-        print(error)
-        conn.rollback()
-    conn.commit()
 
 
 #def setup(): 
@@ -93,7 +95,7 @@ def insert_commodities(commodities: Commodities):
 
 
 T1 = Commodities(1, "titi", True, 2)
-T1.insert_commodities()
+Db.insert_commodities(T1)
 
 
 ####################################_Else_#####################################
