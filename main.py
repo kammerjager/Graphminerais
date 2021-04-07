@@ -56,7 +56,8 @@ T1 = Commodities(1, "titi", True, 2)
 with open('commoditiesEX.json') as f:
     data = json.load(f)
 
-def setup(Name_json): 
+    #probleme category id
+    def setup(Name_json): 
     with open(Name_json) as f:
         data = json.load(f)
     
