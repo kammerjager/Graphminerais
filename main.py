@@ -58,7 +58,7 @@ class Db:
         date = datetime.today().strftime('%d-%m-%Y')
 
         try:
-            parameter = """INSERT or IGNORE INTO Commodities ( Id, Name, average_price, max_sell_price, Date) VALUES (?, ?, ?, ?, ?);"""
+            parameter = """INSERT or IGNORE INTO Data ( Id, Name, average_price, max_sell_price, Date) VALUES (?, ?, ?, ?, ?);"""
             data_comm = ( data.id, data.name, data.average_price, data.max_sell_price, date)
             cursor.execute(parameter, data_comm)
 
