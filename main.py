@@ -14,7 +14,9 @@ class Commodities:
         self.rarity = rarity
         self.category_id = category_id
 
-    def __init2__(self, id: int, name: str, average_price: int, max_sell_price: int):
+class Data:
+    
+    def __init__(self, id: int, name: str, average_price: int, max_sell_price: int):
         self.id = id
         self.name = name
         self.average_price = average_price
@@ -40,7 +42,7 @@ class Db:
         conn, cursor = Db.connect() 
         
         try:
-            parameter = """INSERT or IGNORE INTO Commodities (Id, Name, Rarity, Category_Id) VALUES (?, ?, ?, ?);"""
+            parameter = """INSERT or IGNORE INTO Commodities ( Id, Name, Rarity, Category_Id) VALUES (?, ?, ?, ?);"""
             comm = ( commodities.id, str(commodities.name), commodities.rarity, commodities.category_id)
             cursor.execute(parameter, comm)
 
@@ -50,14 +52,14 @@ class Db:
         conn.commit()
     @staticmethod
     
-    def setup_commodities_data(commodities: Commodities):
+    def setup_commodities_data(data: Data):
 
         conn, cursor = Db.connect() 
         date = datetime.today().strftime('%d-%m-%Y')
 
         try:
-            parameter = """INSERT or IGNORE INTO Commodities (Id, Name, average_price, max_sell_price, Date) VALUES (?, ?, ?, ?, ?);"""
-            data_comm = ( commodities.id, str(commodities.name), commodities.average_price, commodities.max_sell_price, date)
+            parameter = """INSERT or IGNORE INTO Commodities ( Id, Name, average_price, max_sell_price, Date) VALUES (?, ?, ?, ?, ?);"""
+            data_comm = ( data.id, str(data.name), data.average_price, data.max_sell_price, date)
             cursor.execute(parameter, data_comm)
 
         except sqlite3.Error as error:
@@ -96,11 +98,11 @@ def add_data(Name_json):
         data = json.load(f)
     
     for i in range(len(data)):
-        T = Commodities(data[i]["id"], data[i]["name"], data[i]["average_price"], data[i]["max_sell_price"])
+        T = Data(data[i]["id"], data[i]["name"], data[i]["average_price"], data[i]["max_sell_price"])
         Db.setup_commodities(T)
         
         if i+1 != data[i]["id"]:
-            err = Commodities( i, "MISSING VALUE", None, None)
+            err = Data( i, "MISSING VALUE", None, None)
             Db.setup_commodities(err)        
     print("done")
     return 
