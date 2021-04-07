@@ -45,13 +45,12 @@ class Db:
 ################################_test_py_to_sql_###############################
 
 
-T1 = Commodities(1, "titi", True, 2)
+#T1 = Commodities(1, "titi", True, 2)
 #Db.insert_commodities(T1)
 
 
 ##################################_json_to_py_#################################
 
-#manquant: id 71, 120, 270
 
 def setup(Name_json): 
     with open(Name_json) as f:
@@ -68,6 +67,7 @@ def setup(Name_json):
     return 
 
 #setup('commoditiesEX.json')    
+
 
 ###############################_test_json_to_py_###############################
 #print(data)
@@ -97,5 +97,5 @@ def diff(Name_json):
 
 
 ####################################_Else_#####################################
-
+#manquant: id 71, 120, 270
 # formatting: Shift+Alt+f
