@@ -61,19 +61,20 @@ def setup(Name_json):
         data = json.load(f)
     
     for i in range(len(data)):
-        T = Commodities(data[i]["id"], data[i]["name"], data[i]["is_rare"], data[0]["category"]["id"])
+        T = Commodities(data[i]["id"], data[i]["name"], data[i]["is_rare"], data[i]["category"]["id"])
         Db.insert_commodities(T)
-    return print("done")
         
+    return print("done")
+#setup('commoditiesEX.json')    
 
 ###############################_test_json_to_py_###############################
 #print(data)
-
+#print(len(data))
 #item id:1, category:name# print(data[0]["category"]["name"])
 
-#print(len(data))
 
-setup('commoditiesEX.json')
+
+
 
 def diff():
     
