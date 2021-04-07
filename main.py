@@ -32,9 +32,9 @@ class Db:
         conn, cursor = Db.connect() 
         
         try:
-            parameter = """INSERT INTO Commodities (id, nom, rare, category) VALUES (?, ?, ?, ?);"""
-            data = ( commodities.id, str(commodities.name), commodities.rarity, commodities.category_id)
-            cursor.execute(parameter, data)
+            parameter = """INSERT INTO Commodities (Id, Name, Rarity, Category_Id) VALUES (?, ?, ?, ?);"""
+            data_comm = ( commodities.id, str(commodities.name), commodities.rarity, commodities.category_id)
+            cursor.execute(parameter, data_comm)
 
         except sqlite3.Error as error:
             print(error)
@@ -53,26 +53,30 @@ T1 = Commodities(1, "titi", True, 2)
 
 #manquant: id 71, 120, 270
 
-"""with open('commoditiesEX.json') as f:
-    data = json.load(f)"""
+with open('commoditiesEX.json') as f:
+    data = json.load(f)
 
 def setup(Name_json): 
-    with open('commoditiesEX.json') as f:
+    with open(Name_json) as f:
         data = json.load(f)
     
-    #L = len(data)
     for i in range(len(data)):
+        T = Commodities(data[i]["id"], data[i]["name"], data[i]["is_rare"], data[0]["category"]["id"])
+        Db.insert_commodities(T)
+    return print("done")
         
 
 ###############################_test_json_to_py_###############################
-#test###
 #print(data)
 
 #item id:1, category:name# print(data[0]["category"]["name"])
 
 #print(len(data))
 
+setup('commoditiesEX.json')
+
 def diff():
+    
     A = []
     for i in range(373):
         x = data[i]["id"]
