@@ -2,17 +2,23 @@ import json
 
 import sqlite3
 
-
+from datetime import datetime
 ##################################_py_to_sql_##################################
 
 
 class Commodities:
     
-    def __init__(self, id: int, name: str, rarity: bool, category_id: int):
+    def __init__(self, id: int, name: str, rarity: bool, category_id: int,):
         self.id = id
         self.name = name
         self.rarity = rarity
         self.category_id = category_id
+
+    def __init2__(self, id: int, name: str, average_price: int, max_sell_price: int):
+        self.id = id
+        self.name = name
+        self.average_price = average_price
+        self.max_sell_price = max_sell_price
 
 class Db:
     
@@ -35,8 +41,8 @@ class Db:
         
         try:
             parameter = """INSERT or IGNORE INTO Commodities (Id, Name, Rarity, Category_Id) VALUES (?, ?, ?, ?);"""
-            data_comm = ( commodities.id, str(commodities.name), commodities.rarity, commodities.category_id)
-            cursor.execute(parameter, data_comm)
+            comm = ( commodities.id, str(commodities.name), commodities.rarity, commodities.category_id)
+            cursor.execute(parameter, comm)
 
         except sqlite3.Error as error:
             print(error)
@@ -47,10 +53,11 @@ class Db:
     def setup_commodities_data(commodities: Commodities):
 
         conn, cursor = Db.connect() 
-        
+        date = datetime.today().strftime('%d-%m-%Y')
+
         try:
-            parameter = """INSERT or IGNORE INTO Commodities (Id, Name, average_price, max_sell_price) VALUES (?, ?, ?, ?);"""
-            data_comm = ( commodities.id, str(commodities.name), commodities.average_price, commodities.max_sell_price)
+            parameter = """INSERT or IGNORE INTO Commodities (Id, Name, average_price, max_sell_price, Date) VALUES (?, ?, ?, ?, ?);"""
+            data_comm = ( commodities.id, str(commodities.name), commodities.average_price, commodities.max_sell_price, date)
             cursor.execute(parameter, data_comm)
 
         except sqlite3.Error as error:
@@ -89,14 +96,16 @@ def add_data(Name_json):
         data = json.load(f)
     
     for i in range(len(data)):
-        T = Commodities(data[i]["id"], data[i]["name"], data[i]["is_rare"], data[i]["category"]["id"])
-        Db.insert_commodities(T)
+        T = Commodities(data[i]["id"], data[i]["name"], data[i]["average_price"], data[i]["max_sell_price"])
+        Db.setup_commodities(T)
         
         if i+1 != data[i]["id"]:
             err = Commodities( i, "MISSING VALUE", None, None)
-            Db.insert_commodities(err)        
+            Db.setup_commodities(err)        
     print("done")
     return 
+
+add_data('commoditiesEX.json')
 
 ###############################_test_json_to_py_###############################
 #print(data)
