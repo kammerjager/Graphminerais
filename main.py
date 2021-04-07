@@ -50,8 +50,8 @@ class Db:
             print(error)
             conn.rollback()
         conn.commit()
-    @staticmethod
     
+    @staticmethod
     def setup_commodities_data(data: Data):
 
         conn, cursor = Db.connect() 
@@ -59,7 +59,7 @@ class Db:
 
         try:
             parameter = """INSERT or IGNORE INTO Commodities ( Id, Name, average_price, max_sell_price, Date) VALUES (?, ?, ?, ?, ?);"""
-            data_comm = ( data.id, str(data.name), data.average_price, data.max_sell_price, date)
+            data_comm = ( data.id, data.name, data.average_price, data.max_sell_price, date)
             cursor.execute(parameter, data_comm)
 
         except sqlite3.Error as error:
