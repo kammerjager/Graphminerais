@@ -1,6 +1,8 @@
 import json
 
 import sqlite3
+
+
 ##################################_py_to_sql_##################################
 
 
@@ -27,7 +29,7 @@ class Db:
         return conn, cursor
     
     @staticmethod
-    def insert_commodities(commodities: Commodities):
+    def setup_commodities(commodities: Commodities):
 
         conn, cursor = Db.connect() 
         
@@ -40,7 +42,21 @@ class Db:
             print(error)
             conn.rollback()
         conn.commit()
+    @staticmethod
+    
+    def setup_commodities_data(commodities: Commodities):
 
+        conn, cursor = Db.connect() 
+        
+        try:
+            parameter = """INSERT or IGNORE INTO Commodities (Id, Name, average_price, max_sell_price) VALUES (?, ?, ?, ?);"""
+            data_comm = ( commodities.id, str(commodities.name), commodities.average_price, commodities.max_sell_price)
+            cursor.execute(parameter, data_comm)
+
+        except sqlite3.Error as error:
+            print(error)
+            conn.rollback()
+        conn.commit()
 
 ################################_test_py_to_sql_###############################
 
@@ -58,6 +74,22 @@ def setup(Name_json):
     
     for i in range(len(data)):
         T = Commodities(data[i]["id"], data[i]["name"], data[i]["is_rare"], data[i]["category"]["id"])
+        Db.setup_commodities(T)
+        
+        if i+1 != data[i]["id"]:
+            err = Commodities( i, "MISSING VALUE", None, None)
+            Db.setup_commodities(err)        
+    print("done")
+    return 
+
+#setup('commoditiesEX.json')    
+
+def add_data(Name_json): 
+    with open(Name_json) as f:
+        data = json.load(f)
+    
+    for i in range(len(data)):
+        T = Commodities(data[i]["id"], data[i]["name"], data[i]["is_rare"], data[i]["category"]["id"])
         Db.insert_commodities(T)
         
         if i+1 != data[i]["id"]:
@@ -65,9 +97,6 @@ def setup(Name_json):
             Db.insert_commodities(err)        
     print("done")
     return 
-
-#setup('commoditiesEX.json')    
-
 
 ###############################_test_json_to_py_###############################
 #print(data)
