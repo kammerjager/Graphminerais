@@ -74,9 +74,6 @@ with open('commoditiesEX.json') as f:
 #item id:1, category:name# print(data[0]["category"]["name"])
 
 
-
-
-
 def diff():
     
     A = []
