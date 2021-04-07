@@ -10,11 +10,6 @@ with open('commoditiesEX.json') as f:
 
 
 
-
-
-
-
-
 ###############################_test_json_to_py_###############################
 #test###
 #print(data)
@@ -90,7 +85,7 @@ def setup():
 ################################_test_py_to_sql_###############################
 
 
-#T1 = Commodities(1, "titi", True, 2)
+T1 = Commodities(1, "titi", True, 2)
 #Db.insert_commodities(T1)
 
 
