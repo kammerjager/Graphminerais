@@ -53,11 +53,7 @@ T1 = Commodities(1, "titi", True, 2)
 
 #manquant: id 71, 120, 270
 
-with open('commoditiesEX.json') as f:
-    data = json.load(f)
-
-    #probleme category id
-    def setup(Name_json): 
+def setup(Name_json): 
     with open(Name_json) as f:
         data = json.load(f)
     
@@ -74,8 +70,9 @@ with open('commoditiesEX.json') as f:
 #item id:1, category:name# print(data[0]["category"]["name"])
 
 
-def diff():
-    
+def diff(Name_json):
+    with open(Name_json) as f:
+        data = json.load(f)
     A = []
     for i in range(373):
         x = data[i]["id"]
