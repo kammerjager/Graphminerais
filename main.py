@@ -32,7 +32,7 @@ class Db:
         conn, cursor = Db.connect() 
         
         try:
-            parameter = """INSERT INTO Commodities (Id, Name, Rarity, Category_Id) VALUES (?, ?, ?, ?);"""
+            parameter = """INSERT or IGNORE INTO Commodities (Id, Name, Rarity, Category_Id) VALUES (?, ?, ?, ?);"""
             data_comm = ( commodities.id, str(commodities.name), commodities.rarity, commodities.category_id)
             cursor.execute(parameter, data_comm)
 
@@ -61,13 +61,18 @@ def setup(Name_json):
         T = Commodities(data[i]["id"], data[i]["name"], data[i]["is_rare"], data[i]["category"]["id"])
         Db.insert_commodities(T)
         
-    return print("done")
+        if i+1 != data[i]["id"]:
+            err = Commodities( i, "MISSING VALUE", None, None)
+            Db.insert_commodities(err)        
+    print("done")
+    return 
+
 #setup('commoditiesEX.json')    
 
 ###############################_test_json_to_py_###############################
 #print(data)
 #print(len(data))
-#item id:1, category:name# print(data[0]["category"]["name"])
+#item id:1, category:name# print(data[0]["category"]["name"]).
 
 
 def diff(Name_json):
