@@ -8,19 +8,15 @@ from datetime import datetime
 
 class Commodities:
     
-    def __init__(self, id: int, name: str, rarity: bool, category_id: int,):
+    def __init__(self, id: int, name: str, average_price: int, max_sell_price: int, date = None, rarity: bool = None, category_id: int = None):
         self.id = id
         self.name = name
         self.rarity = rarity
         self.category_id = category_id
-
-class Data:
-    
-    def __init__(self, id: int, name: str, average_price: int, max_sell_price: int):
-        self.id = id
-        self.name = name
         self.average_price = average_price
         self.max_sell_price = max_sell_price
+        self.date = date
+        
 
 class Db:
     
@@ -40,10 +36,9 @@ class Db:
     def setup_commodities(commodities: Commodities):
 
         conn, cursor = Db.connect() 
-        
         try:
-            parameter = """INSERT or IGNORE INTO Commodities ( Id, Name, Rarity, Category_Id) VALUES (?, ?, ?, ?);"""
-            comm = ( commodities.id, str(commodities.name), commodities.rarity, commodities.category_id)
+            parameter = """INSERT or IGNORE INTO Commodities ( Id, Name, Category_Id, Rarity) VALUES (?, ?, ?, ?);"""
+            comm = ( commodities.id, str(commodities.name), commodities.category_id, commodities.rarity)
             cursor.execute(parameter, comm)
 
         except sqlite3.Error as error:
@@ -52,14 +47,13 @@ class Db:
         conn.commit()
     
     @staticmethod
-    def setup_commodities_data(data: Data):
+    def setup_commodities_data(commodities: Commodities):
 
         conn, cursor = Db.connect() 
-        date = datetime.today().strftime('%d-%m-%Y')
 
         try:
             parameter = """INSERT or IGNORE INTO Data ( Id, Name, average_price, max_sell_price, Date) VALUES (?, ?, ?, ?, ?);"""
-            data_comm = ( data.id, data.name, data.average_price, data.max_sell_price, date)
+            data_comm = ( commodities.id, commodities.name, commodities.average_price, commodities.max_sell_price, commodities.date)
             cursor.execute(parameter, data_comm)
 
         except sqlite3.Error as error:
@@ -70,9 +64,16 @@ class Db:
 ################################_test_py_to_sql_###############################
 
 
-#T1 = Commodities(1, "titi", True, 2)
-#Db.insert_commodities(T1)
+#T1 = Commodities(1, "titi", 451656, 5684,465645)
+#Db.setup_commodities_data(T1)
 
+"""with open("commoditiesEX.json") as f:
+        data = json.load(f)
+date = datetime.today().strftime('%d/%m/%Y %M-%S')
+T = Commodities( data[1]["id"], data[1]["name"], data[1]["average_price"], data[1]["max_sell_price"], date)
+Db.setup_commodities_data(T)
+
+print(data[1]["average_price"])"""
 
 ##################################_json_to_py_#################################
 
@@ -84,27 +85,25 @@ def setup(Name_json):
     for i in range(len(data)):
         T = Commodities(data[i]["id"], data[i]["name"], data[i]["is_rare"], data[i]["category"]["id"])
         Db.setup_commodities(T)
-        
+
         if i+1 != data[i]["id"]:
             err = Commodities( i, "MISSING VALUE", None, None)
             Db.setup_commodities(err)        
-    print("done")
+    print("setup done")
     return 
 
-#setup('commoditiesEX.json')    
+setup('commoditiesEX.json')    
 
 def add_data(Name_json): 
     with open(Name_json) as f:
         data = json.load(f)
     
+    date = datetime.today().strftime('%d/%m/%Y %M-%S')
+
     for i in range(len(data)):
-        T = Data(data[i]["id"], data[i]["name"], data[i]["average_price"], data[i]["max_sell_price"])
-        Db.setup_commodities(T)
-        
-        if i+1 != data[i]["id"]:
-            err = Data( i, "MISSING VALUE", None, None)
-            Db.setup_commodities(err)        
-    print("done")
+            T = Commodities( data[i]["id"], data[i]["name"], data[i]["average_price"], data[i]["max_sell_price"], date)
+            Db.setup_commodities_data(T)
+    print("add_data done")
     return 
 
 add_data('commoditiesEX.json')
