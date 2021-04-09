@@ -2,8 +2,10 @@ import json
 
 import sqlite3
 
+import requests
+
 from datetime import datetime
-##################################_py_to_sql_##################################
+##################################_Classes_##################################
 
 class Commodities:
     
@@ -59,21 +61,8 @@ class Db:
             conn.rollback()
         conn.commit()
 
-################################_test_py_to_sql_###############################
 
-
-#T1 = Commodities(1, "titi", 451656, 5684,465645)
-#Db.setup_commodities_data(T1)
-
-"""with open("commoditiesEX.json") as f:
-        data = json.load(f)
-date = datetime.today().strftime('%d/%m/%Y %M-%S')
-T = Commodities( data[1]["id"], data[1]["name"], data[1]["average_price"], data[1]["max_sell_price"], date)
-Db.setup_commodities_data(T)
-
-print(data[1]["average_price"])"""
-
-##################################_json_to_py_#################################
+##################################_Fontctions_#################################
 
 
 def setup(Name_json): 
@@ -90,7 +79,7 @@ def setup(Name_json):
     print("setup done")
     return 
 
-setup('commoditiesEX.json')    
+#setup('commoditiesEX.json')    
 
 def add_data(Name_json): 
     with open(Name_json) as f:
@@ -104,12 +93,9 @@ def add_data(Name_json):
     print("add_data done")
     return 
 
-add_data('commoditiesEX.json')
+#add_data('commoditiesEX.json')
 
-###############################_test_json_to_py_###############################
-#print(data)
-#print(len(data))
-#item id:1, category:name# print(data[0]["category"]["name"]).
+###############################_Side_Fonctions_###############################
 
 
 def diff(Name_json):
@@ -132,6 +118,14 @@ def diff(Name_json):
     else:
         return Z
 
+################################_test_###############################
+
+
+#T1 = Commodities(1, "titi", 451656, 5684,465645)
+#Db.setup_commodities_data(T1)
+#print(data)
+#print(len(data))
+#item id:1, category:name# print(data[0]["category"]["name"]).
 
 ####################################_Else_#####################################
 #manquant: id 71, 120, 270
