@@ -65,7 +65,7 @@ class Db:
 ##################################_Fontctions_#################################
 
 
-def setup(Name_json): 
+def setup(Name_json):       #Setup the Db with commodities informations 
     with open(Name_json) as f:
         data = json.load(f)
     
@@ -81,7 +81,7 @@ def setup(Name_json):
 
 #setup('commoditiesEX.json')    
 
-def add_data(Name_json): 
+def add_data(Name_json):        #Add commodities data to the Db
     with open(Name_json) as f:
         data = json.load(f)
     
