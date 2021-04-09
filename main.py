@@ -65,10 +65,14 @@ class Db:
 ##################################_Fontctions_#################################
 
 
-def setup(Name_json):       #Setup the Db with commodities informations 
-    with open(Name_json) as f:
-        data = json.load(f)
-    
+def setup(filelink):       #Setup the Db with commodities informations 
+    if "http" in filelink: 
+        l = requests.get(filelink)
+        data = l.json()
+    else: 
+        with open(filelink) as f:
+            data = json.load(f)
+        
     for i in range(len(data)):
         T = Commodities(data[i]["id"], data[i]["name"], None, None, None, data[i]["category"]["id"], data[i]["is_rare"])
         Db.setup_commodities(T)
@@ -81,10 +85,14 @@ def setup(Name_json):       #Setup the Db with commodities informations
 
 #setup('commoditiesEX.json')    
 
-def add_data(Name_json):        #Add commodities data to the Db
-    with open(Name_json) as f:
-        data = json.load(f)
-    
+def add_data(filelink):        #Add commodities data to the Db
+    if "http" in filelink: 
+        l = requests.get(filelink)
+        data = l.json()
+    else: 
+        with open(filelink) as f:
+            data = json.load(f)
+
     date = datetime.today().strftime('%d/%m/%Y')
 
     for i in range(len(data)):
@@ -93,7 +101,7 @@ def add_data(Name_json):        #Add commodities data to the Db
     print("add_data done")
     return 
 
-#add_data('commoditiesEX.json')
+#add_data('https://eddb.io/archive/v6/commodities.json')
 
 ###############################_Side_Fonctions_###############################
 
@@ -121,7 +129,9 @@ def diff(Name_json):
 
 ################################_test_###############################
 
-
+#r = requests.get('https://eddb.io/archive/v6/commodities.json')
+#print(r.status_code)
+#print(r.json())
 #T1 = Commodities(1, "titi", 451656, 5684,465645)
 #Db.setup_commodities_data(T1)
 #print(data)
