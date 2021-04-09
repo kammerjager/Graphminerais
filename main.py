@@ -5,10 +5,9 @@ import sqlite3
 from datetime import datetime
 ##################################_py_to_sql_##################################
 
-
 class Commodities:
     
-    def __init__(self, id: int, name: str, average_price: int, max_sell_price: int, date = None, rarity: bool = None, category_id: int = None):
+    def __init__(self, id: int, name: str, average_price: int, max_sell_price: int, date, category_id: int, rarity: bool):
         self.id = id
         self.name = name
         self.rarity = rarity
@@ -16,7 +15,6 @@ class Commodities:
         self.average_price = average_price
         self.max_sell_price = max_sell_price
         self.date = date
-        
 
 class Db:
     
@@ -47,7 +45,7 @@ class Db:
         conn.commit()
     
     @staticmethod
-    def setup_commodities_data(commodities: Commodities):
+    def setup_data(commodities: Commodities):
 
         conn, cursor = Db.connect() 
 
@@ -83,12 +81,12 @@ def setup(Name_json):
         data = json.load(f)
     
     for i in range(len(data)):
-        T = Commodities(data[i]["id"], data[i]["name"], data[i]["is_rare"], data[i]["category"]["id"])
+        T = Commodities(data[i]["id"], data[i]["name"], None, None, None, data[i]["category"]["id"], data[i]["is_rare"])
         Db.setup_commodities(T)
 
         if i+1 != data[i]["id"]:
-            err = Commodities( i, "MISSING VALUE", None, None)
-            Db.setup_commodities(err)        
+            err = Commodities( i, "MISSING VALUE", None, None, None, None, None)
+            Db.setup_commodities(err)     
     print("setup done")
     return 
 
@@ -98,11 +96,11 @@ def add_data(Name_json):
     with open(Name_json) as f:
         data = json.load(f)
     
-    date = datetime.today().strftime('%d/%m/%Y %M-%S')
+    date = datetime.today().strftime('%d/%m/%Y')
 
     for i in range(len(data)):
-            T = Commodities( data[i]["id"], data[i]["name"], data[i]["average_price"], data[i]["max_sell_price"], date)
-            Db.setup_commodities_data(T)
+            T = Commodities( data[i]["id"], data[i]["name"], data[i]["average_price"], data[i]["max_sell_price"], date, None, None)
+            Db.setup_data(T)
     print("add_data done")
     return 
 
