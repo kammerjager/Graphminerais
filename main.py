@@ -4,6 +4,8 @@ import sqlite3
 
 import requests
 
+from tkinter import *
+
 from datetime import datetime
 ##################################_Classes_##################################
 
@@ -52,7 +54,7 @@ class Db:
         conn, cursor = Db.connect() 
 
         try:
-            parameter = """INSERT or IGNORE INTO Data ( Id, Name, average_price, max_sell_price, Date) VALUES (?, ?, ?, ?, ?);"""
+            parameter = """INSERT or IGNORE INTO TEST ( Id, Name, average_price, max_sell_price, Date) VALUES (?, ?, ?, ?, ?);"""
             data_comm = ( commodities.id, commodities.name, commodities.average_price, commodities.max_sell_price, commodities.date)
             cursor.execute(parameter, data_comm)
 
@@ -105,8 +107,18 @@ def add_data(filelink):        #Add commodities data to the Db
 
 ###############################_Side_Fonctions_###############################
 
+fe = Tk()
+fe.title("Graphminerais")
+fe.geometry("1080x720")
+fe.minsize(1080, 720)
+fe.iconbitmap("IconeGraphMinerais.ico")
+fe.config(background = "#303030" )
+fe.mainloop()
 
-def diff(Name_json):
+
+
+
+def diff(Name_json):        # search for missing data
     with open(Name_json) as f:
         data = json.load(f)
     A = []
