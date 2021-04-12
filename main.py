@@ -4,7 +4,8 @@ import sqlite3
 
 import requests
 
-from tkinter import *
+import tkinter as tk
+from tkinter import ttk
 
 from datetime import datetime
 ##################################_Classes_##################################
@@ -54,7 +55,7 @@ class Db:
         conn, cursor = Db.connect() 
 
         try:
-            parameter = """INSERT or IGNORE INTO TEST ( Id, Name, average_price, max_sell_price, Date) VALUES (?, ?, ?, ?, ?);"""
+            parameter = """INSERT or IGNORE INTO Data ( Id, Name, average_price, max_sell_price, Date) VALUES (?, ?, ?, ?, ?);"""
             data_comm = ( commodities.id, commodities.name, commodities.average_price, commodities.max_sell_price, commodities.date)
             cursor.execute(parameter, data_comm)
 
@@ -63,11 +64,26 @@ class Db:
             conn.rollback()
         conn.commit()
 
+    @staticmethod
+    def get():
+        
+        conn, cursor = Db.connect()
+
+        try:
+            cursor.execute("SELECT Id,Name FROM Commodities WHERE Name != 'MISSING VALUE';")
+            rows = cursor.fetchall()
+
+        except sqlite3.Error as error:
+            print(error)
+            conn.rollback()
+        conn.commit()  
+        return rows          
+
 
 ##################################_Fontctions_#################################
 
 
-def setup(filelink):       #Setup the Db with commodities informations 
+def setup(filelink):       #Setup the Db with commodities informations
     if "http" in filelink: 
         l = requests.get(filelink)
         data = l.json()
@@ -83,7 +99,7 @@ def setup(filelink):       #Setup the Db with commodities informations
             err = Commodities( i, "MISSING VALUE", None, None, None, None, None)
             Db.setup_commodities(err)     
     print("setup done")
-    return 
+    return
 
 #setup('commoditiesEX.json')    
 
@@ -98,24 +114,52 @@ def add_data(filelink):        #Add commodities data to the Db
     date = datetime.today().strftime('%d/%m/%Y')
 
     for i in range(len(data)):
-            T = Commodities( data[i]["id"], data[i]["name"], data[i]["average_price"], data[i]["max_sell_price"], date, None, None)
+            T = Commodities(data[i]["id"], data[i]["name"], data[i]["average_price"], data[i]["max_sell_price"], date, None, None)
             Db.setup_data(T)
     print("add_data done")
     return 
 
 #add_data('https://eddb.io/archive/v6/commodities.json')
 
+def dict_to_list(d):
+    
+    l = []
+    
+    for i in range(len(d)):
+        l = l + [str(d[i][0]) + " - " + str(d[i][1])] 
+    
+    return l
+
+#print(dict_to_list(Db.get()))
+
+
 ###############################_Side_Fonctions_###############################
 
-fe = Tk()
+def callbackFunc(event):
+    print("New Element Selected")
+
+#l = requests.get('commoditiesEX.json')
+#data = l.json()
+fe = tk.Tk()
 fe.title("Graphminerais")
 fe.geometry("1080x720")
 fe.minsize(1080, 720)
+labelTop = tk.Label(fe, text = "Choose your Item")
+labelTop.grid(column=0, row=0)
+comboExample = ttk.Combobox(fe, values=dict_to_list(Db.get()),)
+                                    
+comboExample.grid(column=0, row=1)
+comboExample.current(1)
+
+comboExample.bind("<<ComboboxSelected>>", callbackFunc)
+
+
+
 fe.iconbitmap("IconeGraphMinerais.ico")
 fe.config(background = "#303030" )
 fe.mainloop()
 
-
+#print(Db.get()[0][0])
 
 
 def diff(Name_json):        # search for missing data
