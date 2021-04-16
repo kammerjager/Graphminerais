@@ -7,6 +7,8 @@ import requests
 import tkinter as tk
 from tkinter import ttk
 
+import matplotlib.pyplot as plt
+
 from datetime import datetime
 ##################################_Classes_##################################
 
@@ -65,7 +67,7 @@ class Db:
         conn.commit()
 
     @staticmethod
-    def get():
+    def get_id_name():
         
         conn, cursor = Db.connect()
 
@@ -77,10 +79,37 @@ class Db:
             print(error)
             conn.rollback()
         conn.commit()  
+        
         return rows          
+    
+    @staticmethod
+    def get_values():
 
+        conn, cursor = Db.connect()
 
+        try:
+            cursor.execute("SELECT Id, Name, average_price, max_sell_price, Date FROM Data;")
+            rows = cursor.fetchall()
+        
+        except sqlite3.Error as error:
+            print(error)
+            conn.rollback()
+        conn.commit()  
+        
+        return rows    
+
+"""
+class Graph:
+    
+    def draw_graph(values):
+
+            
+
+            plt.title()
+            plt.plot()
+"""
 ##################################_Fontctions_#################################
+
 
 
 def setup(filelink):       #Setup the Db with commodities informations
@@ -130,36 +159,51 @@ def dict_to_list(d):
     
     return l
 
-#print(dict_to_list(Db.get()))
-
-
+def dict_select(d, item):
+    print(len(d))
+    for i in range(len(d)):
+        #print(i)
+        if d[i][0] != item:
+            #print(d[i][0])
+            del d[i]
+    return d
+print(dict_select(Db.get_values(), 276))
 ###############################_Side_Fonctions_###############################
-
-def callbackFunc(event):
-    print("New Element Selected")
 
 #l = requests.get('commoditiesEX.json')
 #data = l.json()
+
+#Instance
 fe = tk.Tk()
 fe.title("Graphminerais")
-fe.geometry("1080x720")
-fe.minsize(1080, 720)
-labelTop = tk.Label(fe, text = "Choose your Item")
-labelTop.grid(column=0, row=0)
-comboExample = ttk.Combobox(fe, values=dict_to_list(Db.get()),)
-                                    
-comboExample.grid(column=0, row=1)
-comboExample.current(1)
+fe.geometry("1280x720")
+fe.minsize(1280, 720)
+fe.maxsize(1280, 720)
 
-comboExample.bind("<<ComboboxSelected>>", callbackFunc)
+#FRAME 1 Selection
+frame1 = tk.Frame(fe, borderwidth=3, background="#333333", relief=tk.RAISED)
+frame1.pack(side=tk.TOP)
+labelTop = tk.Label(frame1, text = "Select your Item", font=("Space Age",20), background="#333333", foreground="white")
+labelTop.grid(column=0, row=1)
+Menu = ttk.Combobox(frame1, values=dict_to_list(Db.get_id_name()), font=(20), background="#333333")     
+Menu.grid(column=0, row=2)
+Menu.current(0)
+def get_selection(Menu):
+    selection = Menu.get()
+    print(selection)
+    return selection
+bouton_selection = tk.Button(frame1, text="Ok",command= lambda: get_selection(Menu), background="#333333", foreground="white")
+bouton_selection.grid(column=0, row=3)
 
+#FRAME 2 Graphique
 
+frame2 = tk.Frame(fe, borderwidth=3, background="#262523", relief=tk.RAISED)
 
 fe.iconbitmap("IconeGraphMinerais.ico")
-fe.config(background = "#303030" )
+fe.config(background = "#3C3C3C" )
 fe.mainloop()
 
-#print(Db.get()[0][0])
+
 
 
 def diff(Name_json):        # search for missing data
@@ -193,7 +237,9 @@ def diff(Name_json):        # search for missing data
 #print(data)
 #print(len(data))
 #item id:1, category:name# print(data[0]["category"]["name"]).
-
+#print(dict_to_list(Db.get_id_name()))
+#print(Db.get_id_name()[0][0])
+#print(Db.get_values())
 ####################################_Else_#####################################
 #manquant: id 71, 120, 270
 # formatting: Shift+Alt+f
