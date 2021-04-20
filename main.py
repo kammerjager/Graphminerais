@@ -98,16 +98,6 @@ class Db:
         
         return rows    
 
-"""
-class Graph:
-    
-    def draw_graph(values):
-
-            
-
-            plt.title()
-            plt.plot()
-"""
 ##################################_Fontctions_#################################
 
 
@@ -150,7 +140,7 @@ def add_data(filelink):        #Add commodities data to the Db
 
 #add_data('https://eddb.io/archive/v6/commodities.json')
 
-def dict_to_list(d):
+def dict_to_list(d):        #makes dict to liste ex: ['1 - Explosives', '2 - Hydrogen Fuel', '3 - Mineral Oil',...,'376 - Pod Shell Tissue']
     
     l = []
     
@@ -159,15 +149,37 @@ def dict_to_list(d):
     
     return l
 
-def dict_select(d, item):
-    print(len(d))
+def dict_select(d, item):       #get one item from Datas ex:[(276, 'Low Temperature Diamonds', 106288, 397373, '11/04/2021'), (276, 'Low Temperature Diamonds', 106288, 520566, '20/04/2021')]
+    
+    l = []
+
     for i in range(len(d)):
-        #print(i)
-        if d[i][0] != item:
-            #print(d[i][0])
-            del d[i]
-    return d
-print(dict_select(Db.get_values(), 276))
+        if d[i][0] == item:
+            l = l + [d[i]]
+
+    return l
+
+def listitem_to_listvalues(listitem,rang):      #get one type of value from one item ex:[106288, 106288, 106288, 106288, 106288, 106288, 106288, 106288, 106288, 106288, 106288, 106288, 106288, 106288, 106288, 106288, 106288, 106288, 106288, 106288]
+
+    listvalues = []
+    
+    for i in range(len(listitem)):
+        listvalues = listvalues + [listitem[i][rang]]
+    return listvalues
+
+def draw_graph(Idvalues):
+
+    plt.title("Tableau de l'évolution du prix moyen et maximal de l'item : "+ dict_select(Db.get_values(), Idvalues)[0][1])
+    Ymoy = listitem_to_listvalues(dict_select(Db.get_values(), Idvalues),2)
+    Ymax = listitem_to_listvalues(dict_select(Db.get_values(), Idvalues),3)
+    X = listitem_to_listvalues(dict_select(Db.get_values(), Idvalues),4)
+
+    plt.plot(X,Ymoy)
+    plt.plot(X,Ymax)
+    plt.show()
+    return
+
+draw_graph(276)
 ###############################_Side_Fonctions_###############################
 
 #l = requests.get('commoditiesEX.json')
@@ -240,6 +252,9 @@ def diff(Name_json):        # search for missing data
 #print(dict_to_list(Db.get_id_name()))
 #print(Db.get_id_name()[0][0])
 #print(Db.get_values())
+#print(dict_select(Db.get_values(), 276))
+#print(listitem_to_listvalues(dict_select(Db.get_values(), 276),2))
+
 ####################################_Else_#####################################
 #manquant: id 71, 120, 270
 # formatting: Shift+Alt+f
