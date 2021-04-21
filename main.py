@@ -98,6 +98,21 @@ class Db:
         
         return rows    
 
+    @staticmethod
+    def change_value():
+        
+        conn, cursor = Db.connect()
+
+        try:
+            cursor.execute("UPDATE table_name SET column1 = value1, column2 = value2...., columnN = valueN WHERE [condition];")
+            rows = cursor.fetchall()
+
+        except sqlite3.Error as error:
+            print(error)
+            conn.rollback()
+        conn.commit()  
+        
+        return rows       
 ##################################_Fontctions_#################################
 
 
@@ -176,15 +191,16 @@ def draw_graph(Idvalues):
 
     plt.plot(X,Ymoy)
     plt.plot(X,Ymax)
-    plt.show()
+    #plt.show()
     return
 
-draw_graph(276)
+draw_graph(276) #faire fc qui change les dates
+
 ###############################_Side_Fonctions_###############################
 
 #l = requests.get('commoditiesEX.json')
 #data = l.json()
-
+"""
 #Instance
 fe = tk.Tk()
 fe.title("Graphminerais")
@@ -215,7 +231,7 @@ fe.iconbitmap("IconeGraphMinerais.ico")
 fe.config(background = "#3C3C3C" )
 fe.mainloop()
 
-
+"""
 
 
 def diff(Name_json):        # search for missing data
