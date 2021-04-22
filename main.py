@@ -169,17 +169,25 @@ def listitem_to_listvalues(listitem,rang):      #get one type of value from one 
 
 def draw_graph(Idvalues):
 
-    plt.title("Tableau de l'évolution du prix moyen et maximal de l'item : "+ dict_select(Db.get_values(), Idvalues)[0][1])
-    Ymoy = listitem_to_listvalues(dict_select(Db.get_values(), Idvalues),2)
+    #plt.title("Tableau de l'évolution du prix moyen et maximal de l'item : "+ dict_select(Db.get_values(), Idvalues)[0][1])
     Ymax = listitem_to_listvalues(dict_select(Db.get_values(), Idvalues),3)
+    Ymoy = listitem_to_listvalues(dict_select(Db.get_values(), Idvalues),2)
     X = listitem_to_listvalues(dict_select(Db.get_values(), Idvalues),4)
 
-    plt.plot(X,Ymoy)
-    plt.plot(X,Ymax)
-    #plt.show()
+    fig, (axe1, axe2) = plt.subplots(2, 1)
+    fig.suptitle("Tableau de l'évolution du prix maximal et moyen de l'item : "+ dict_select(Db.get_values(), Idvalues)[0][1])
+
+    axe1.plot(X,Ymax, ".-")
+    axe1.set_ylabel("prix maximal")
+    
+    axe2.plot(X,Ymoy, ".-")
+    axe2.set_ylabel("prix moyen")
+    axe2.set_xlabel("jour")
+    
+    plt.show()
     return
 
-draw_graph(276) #faire fc qui change les dates
+draw_graph(276) #faire une coube moyenne sur prix max
 
 ###############################_Side_Fonctions_###############################
 
