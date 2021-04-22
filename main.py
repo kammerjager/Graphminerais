@@ -14,14 +14,14 @@ from datetime import datetime
 
 class Commodities:
     
-    def __init__(self, id: int, name: str, average_price: int, max_sell_price: int, date, category_id: int, rarity: bool):
+    def __init__(self, id: int, name: str, average_price: int, max_sell_price: int, datee, category_id: int, rarity: bool):
         self.id = id
         self.name = name
         self.rarity = rarity
         self.category_id = category_id
         self.average_price = average_price
         self.max_sell_price = max_sell_price
-        self.date = date
+        self.datee = datee
 
 class Db:
     
@@ -57,8 +57,8 @@ class Db:
         conn, cursor = Db.connect() 
 
         try:
-            parameter = """INSERT or IGNORE INTO Data ( Id, Name, average_price, max_sell_price, Date) VALUES (?, ?, ?, ?, ?);"""
-            data_comm = ( commodities.id, commodities.name, commodities.average_price, commodities.max_sell_price, commodities.date)
+            parameter = """INSERT or IGNORE INTO Data ( Id, Name, average_price, max_sell_price, Datee) VALUES (?, ?, ?, ?, ?);"""
+            data_comm = ( commodities.id, commodities.name, commodities.average_price, commodities.max_sell_price, commodities.datee)
             cursor.execute(parameter, data_comm)
 
         except sqlite3.Error as error:
@@ -88,7 +88,7 @@ class Db:
         conn, cursor = Db.connect()
 
         try:
-            cursor.execute("SELECT Id, Name, average_price, max_sell_price, Date FROM Data;")
+            cursor.execute("SELECT Id, Name, average_price, max_sell_price, Datee FROM Data;")
             rows = cursor.fetchall()
         
         except sqlite3.Error as error:
@@ -97,22 +97,7 @@ class Db:
         conn.commit()  
         
         return rows    
-
-    @staticmethod
-    def change_value():
-        
-        conn, cursor = Db.connect()
-
-        try:
-            cursor.execute("UPDATE table_name SET column1 = value1, column2 = value2...., columnN = valueN WHERE [condition];")
-            rows = cursor.fetchall()
-
-        except sqlite3.Error as error:
-            print(error)
-            conn.rollback()
-        conn.commit()  
-        
-        return rows       
+     
 ##################################_Fontctions_#################################
 
 
@@ -145,10 +130,10 @@ def add_data(filelink):        #Add commodities data to the Db
         with open(filelink) as f:
             data = json.load(f)
 
-    date = datetime.today().strftime('%d/%m/%Y')
+    datee = datetime.today().strftime('%d/%m/%Y')
 
     for i in range(len(data)):
-            T = Commodities(data[i]["id"], data[i]["name"], data[i]["average_price"], data[i]["max_sell_price"], date, None, None)
+            T = Commodities(data[i]["id"], data[i]["name"], data[i]["average_price"], data[i]["max_sell_price"], datee, None, None)
             Db.setup_data(T)
     print("add_data done")
     return 

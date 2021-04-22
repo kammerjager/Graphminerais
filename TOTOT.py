@@ -1,6 +1,14 @@
 import tkinter as tk
 from tkinter import ttk
 
+#from main import Db
+
+
+
+
+
+
+"""
 def callbackFunc(event):
      print("New Element Selected")
      
@@ -26,3 +34,5 @@ comboExample.bind("<<ComboboxSelected>>", callbackFunc)
 
 
 app.mainloop()
+"""
+
