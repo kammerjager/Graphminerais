@@ -26,7 +26,7 @@ class Commodities:
 class Db:
     
     @staticmethod
-    def connect():
+    def connect():      #connection to Base
         try:
             conn = sqlite3.connect('dbminerais.db')
             #print("success")
@@ -38,7 +38,7 @@ class Db:
         return conn, cursor
     
     @staticmethod
-    def setup_commodities(commodities: Commodities):
+    def setup_commodities(commodities: Commodities):        #add to commodities base Ids, Names, category_ids, Rarity
 
         conn, cursor = Db.connect() 
         try:
@@ -52,7 +52,7 @@ class Db:
         conn.commit()
     
     @staticmethod
-    def setup_data(commodities: Commodities):
+    def sends_data(commodities: Commodities):       #add to Data base Ids, Names, Aver_prices, Max_prices, Dates
 
         conn, cursor = Db.connect() 
 
@@ -67,7 +67,7 @@ class Db:
         conn.commit()
 
     @staticmethod
-    def get_id_name():
+    def get_id_name():      #get Ids and Names without the missings values from the commodities base
         
         conn, cursor = Db.connect()
 
@@ -83,7 +83,7 @@ class Db:
         return rows          
     
     @staticmethod
-    def get_values():
+    def get_values():       #get Ids, Names, Aver_prices, Max_prices, Dates from the data base
 
         conn, cursor = Db.connect()
 
@@ -99,7 +99,6 @@ class Db:
         return rows    
      
 ##################################_Fontctions_#################################
-
 
 
 def setup(filelink):       #Setup the Db with commodities informations
@@ -134,11 +133,23 @@ def add_data(filelink):        #Add commodities data to the Db
 
     for i in range(len(data)):
             T = Commodities(data[i]["id"], data[i]["name"], data[i]["average_price"], data[i]["max_sell_price"], datee, None, None)
-            Db.setup_data(T)
+            Db.sends_data(T)
     print("add_data done")
     return 
 
 #add_data('https://eddb.io/archive/v6/commodities.json')
+
+def daily_check():
+    
+    datee = datetime.today().strftime('%d/%m/%Y')
+    datas = Db.get_values()
+    
+    if datas[len(datas)-1][4] != datee:
+        add_data('https://eddb.io/archive/v6/commodities.json')
+        print("datas need an up date")
+    else:
+        print("datas already up to date")
+daily_check()
 
 def dict_to_list(d):        #makes dict to liste ex: ['1 - Explosives', '2 - Hydrogen Fuel', '3 - Mineral Oil',...,'376 - Pod Shell Tissue']
     
@@ -167,6 +178,7 @@ def listitem_to_listvalues(listitem,rang):      #get one type of value from one 
         listvalues = listvalues + [listitem[i][rang]]
     return listvalues
 
+
 def draw_graph(Idvalues):
 
     #plt.title("Tableau de l'évolution du prix moyen et maximal de l'item : "+ dict_select(Db.get_values(), Idvalues)[0][1])
@@ -187,7 +199,7 @@ def draw_graph(Idvalues):
     plt.show()
     return
 
-draw_graph(276) #faire une coube moyenne sur prix max
+#draw_graph(276) #faire une coube moyenne sur prix max
 
 ###############################_Side_Fonctions_###############################
 
@@ -251,17 +263,29 @@ def diff(Name_json):        # search for missing data
 ################################_test_###############################
 
 #r = requests.get('https://eddb.io/archive/v6/commodities.json')
+
 #print(r.status_code)
+
 #print(r.json())
+
 #T1 = Commodities(1, "titi", 451656, 5684,465645)
+
 #Db.setup_commodities_data(T1)
+
 #print(data)
+
 #print(len(data))
+
 #item id:1, category:name# print(data[0]["category"]["name"]).
+
 #print(dict_to_list(Db.get_id_name()))
+
 #print(Db.get_id_name()[0][0])
-#print(Db.get_values())
+
+#print(Db.get_values())      #(1, 'Explosives', 419, 2101, '26/03/2021')
+
 #print(dict_select(Db.get_values(), 276))
+
 #print(listitem_to_listvalues(dict_select(Db.get_values(), 276),2))
 
 ####################################_Else_#####################################
