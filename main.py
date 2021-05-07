@@ -263,8 +263,15 @@ def get_selection(Menu):
 bouton_selection = tk.Button(frame1, text="Ok",command= lambda: get_selection(Menu),  background="#333333", foreground="white")
 bouton_selection.grid(column=0, row=3)
 
+#MENUBAR
 
+menubar = tk.Menu(fe)
+menu1 = tk.Menu(menubar, tearoff=0)
+menu1.add_command(label="Quitter", command=fe.quit)
+menubar.add_cascade(label="Quitter", menu=menu1)
+fe.config(menu=menubar)
 #SETTING
+
 fe.iconbitmap("IconeGraphMinerais.ico")
 fe.config(background = "#3C3C3C" )
 fe.mainloop()
