@@ -1,38 +1,34 @@
-import tkinter as tk
-from tkinter import ttk
-
-#from main import Db
-
-
-
-
-
-
-"""
-def callbackFunc(event):
-     print("New Element Selected")
-     
-app = tk.Tk() 
-app.geometry('200x100')
-
-labelTop = tk.Label(app,
-                    text = "Choose your favourite month")
-labelTop.grid(column=0, row=0)
-
-comboExample = ttk.Combobox(app, 
-                            values=[
-                                    "January", 
-                                    "February",
-                                    "March",
-                                    "April"])
-
-
-comboExample.grid(column=0, row=1)
-comboExample.current(1)
-
-comboExample.bind("<<ComboboxSelected>>", callbackFunc)
-
-
-app.mainloop()
-"""
-
+'''''#from tkinter import *
+ 
+def TraiteR():
+    if w.find_withtag('un'):
+        delete('un')
+    else:
+        w.create_line(0,0,200,100, fill="red", tags="un")
+def TraiteV():
+    if w.find_withtag('deux'):
+        delete('deux')
+    else:
+       w.create_line(0,0,100,100, fill="blue", tags="deux") 
+ 
+def TraiteJ():
+    if w.find_withtag('trois'):
+        delete('trois')
+    else:
+        w.create_line(0,0,100,200, fill="yellow", tags="trois")
+ 
+def delete(MonTag):
+    w.delete(w.find_withtag(MonTag))
+ 
+master =Tk()
+w=Canvas(master, width=200,height=100)
+w.pack()
+w.create_line(0,0,200,100, fill="red", tags="un")
+w.create_line(0,0,100,100, fill="blue", tags="deux")
+w.create_line(0,0,100,200, fill="yellow", tags="trois")
+Button(text="Rouge", command=TraiteR).pack(side='left')
+Button(text="Vert", command=TraiteV).pack(side='left')
+Button(text="Jaune", command=TraiteJ).pack(side='left')
+Button(text="Quitter", command=quit).pack(side='left')
+ 
+mainloop()'''''
