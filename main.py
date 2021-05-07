@@ -6,6 +6,7 @@ import requests
 
 import tkinter as tk
 from tkinter import ttk
+from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg)
 
 import matplotlib.pyplot as plt
 
@@ -180,22 +181,23 @@ def listitem_to_listvalues(listitem,rang):      #get one type of value from one 
 
 
 def draw_graph(Idvalues):
-
-    #plt.title("Tableau de l'évolution du prix moyen et maximal de l'item : "+ dict_select(Db.get_values(), Idvalues)[0][1])
+    #draw_graph
     Ymax = listitem_to_listvalues(dict_select(Db.get_values(), Idvalues),3)
     Ymoy = listitem_to_listvalues(dict_select(Db.get_values(), Idvalues),2)
     X = listitem_to_listvalues(dict_select(Db.get_values(), Idvalues),4)
 
     fig, (axe1, axe2) = plt.subplots(2, 1)
     fig.suptitle("Tableau de l'évolution du prix maximal et moyen de l'item : "+ dict_select(Db.get_values(), Idvalues)[0][1])
-
+    fig.subplots_adjust(hspace=0)
     axe1.plot(X,Ymax, ".-")
     axe1.set_ylabel("prix maximal")
     
+
     axe2.plot(X,Ymoy, ".-")
     axe2.set_ylabel("prix moyen")
     axe2.set_xlabel("jour")
-    
+    fig.autofmt_xdate()    
+
     plt.show()
     return
 
@@ -205,13 +207,18 @@ def draw_graph(Idvalues):
 
 #l = requests.get('commoditiesEX.json')
 #data = l.json()
-"""
+
 #Instance
 fe = tk.Tk()
 fe.title("Graphminerais")
 fe.geometry("1280x720")
 fe.minsize(1280, 720)
 fe.maxsize(1280, 720)
+
+#FRAME 2 Graphique
+
+frame2 = tk.Frame(fe, borderwidth=3, background="#262523", relief=tk.RAISED)
+frame2.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=1)
 
 #FRAME 1 Selection
 frame1 = tk.Frame(fe, borderwidth=3, background="#333333", relief=tk.RAISED)
@@ -221,22 +228,48 @@ labelTop.grid(column=0, row=1)
 Menu = ttk.Combobox(frame1, values=dict_to_list(Db.get_id_name()), font=(20), background="#333333")     
 Menu.grid(column=0, row=2)
 Menu.current(0)
+
 def get_selection(Menu):
+    
     selection = Menu.get()
     print(selection)
-    return selection
-bouton_selection = tk.Button(frame1, text="Ok",command= lambda: get_selection(Menu), background="#333333", foreground="white")
+    item = [int(s) for s in selection.split() if s.isdigit()]
+    print(item)
+    
+    #draw_graph
+    Ymax = listitem_to_listvalues(dict_select(Db.get_values(), item[0]),3)
+    Ymoy = listitem_to_listvalues(dict_select(Db.get_values(), item[0]),2)
+    X = listitem_to_listvalues(dict_select(Db.get_values(), item[0]),4)
+
+    fig, (axe1, axe2) = plt.subplots(2, 1)
+    fig.suptitle("Tableau de l'évolution du prix maximal et moyen de l'item : "+ dict_select(Db.get_values(), item[0])[0][1])
+    fig.subplots_adjust(hspace=0)
+    axe1.plot(X,Ymax, ".-")
+    axe1.set_ylabel("prix maximal")
+    
+
+    axe2.plot(X,Ymoy, ".-")
+    axe2.set_ylabel("prix moyen")
+    axe2.set_xlabel("jour")
+    fig.autofmt_xdate()   
+    #plt.show() 
+    ####
+
+    canvas = FigureCanvasTkAgg(fig, master=frame2)
+    canvas.draw()
+    canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+    return item
+
+bouton_selection = tk.Button(frame1, text="Ok",command= lambda: get_selection(Menu),  background="#333333", foreground="white")
 bouton_selection.grid(column=0, row=3)
 
-#FRAME 2 Graphique
 
-frame2 = tk.Frame(fe, borderwidth=3, background="#262523", relief=tk.RAISED)
-
+#SETTING
 fe.iconbitmap("IconeGraphMinerais.ico")
 fe.config(background = "#3C3C3C" )
 fe.mainloop()
 
-"""
+
 
 
 def diff(Name_json):        # search for missing data
