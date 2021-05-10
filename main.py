@@ -42,6 +42,7 @@ class Db:
     def setup_commodities(commodities: Commodities):        #add to commodities base Ids, Names, category_ids, Rarity
 
         conn, cursor = Db.connect() 
+        
         try:
             parameter = """INSERT or IGNORE INTO Commodities ( Id, Name, Category_Id, Rarity) VALUES (?, ?, ?, ?);"""
             comm = ( commodities.id, str(commodities.name), commodities.category_id, commodities.rarity)
